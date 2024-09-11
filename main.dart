@@ -56,7 +56,7 @@ void main() {
         printError('Invalid choice. Please try again.');
     }
 
-    // Automatically save data after each operation
+    
     if (choice != '9') {
       saveData(students, courses);
     }
@@ -73,14 +73,14 @@ void createStudent(Map<String, Student> students, Map<String, Course> courses) {
   String name = readInput('Enter student name');
   String studentId = readInput('Enter student ID', isUnique: true, existingIds: students.keys.toList());
 
-  // Display available courses to the user
+  
   printAvailableCourses(courses);
 
-  // Get the list of selected course IDs
+  
   String coursesInput = readInput('Enter course IDs the student is enrolled in (comma-separated)', isOptional: true);
   List<String> selectedCourses = coursesInput.isNotEmpty ? coursesInput.split(',').map((e) => e.trim()).toList() : [];
 
-  // Validate selected courses
+  
   List<String> validCourses = [];
   for (var courseId in selectedCourses) {
     if (courses.containsKey(courseId)) {
@@ -90,7 +90,7 @@ void createStudent(Map<String, Student> students, Map<String, Course> courses) {
     }
   }
 
-  // Create the student with valid courses
+  
   students[studentId] = Student(name, studentId, validCourses);
   print('Student added successfully.');
 }
@@ -134,7 +134,7 @@ void enrollStudentInCourse(Map<String, Student> students, Map<String, Course> co
 void viewStudentSchedule(Map<String, Student> students, Map<String, Course> courses) {
   String studentId = readInput('Enter student ID', existingIds: students.keys.toList());
 
-  // Check if the student exists
+  
   if (!students.containsKey(studentId)) {
     printError('Student with ID $studentId does not exist.');
     return;
@@ -155,7 +155,7 @@ void viewStudentSchedule(Map<String, Student> students, Map<String, Course> cour
 void viewCourseRoster(Map<String, Course> courses, Map<String, Student> students) {
   String courseId = readInput('Enter course ID', existingIds: courses.keys.toList());
 
-  // Check if the course exists
+  
   if (!courses.containsKey(courseId)) {
     printError('Course with ID $courseId does not exist.');
     return;
@@ -203,7 +203,7 @@ void dropCourse(Map<String, Student> students, Map<String, Course> courses) {
 void updateStudent(Map<String, Student> students) {
   String studentId = readInput('Enter student ID', existingIds: students.keys.toList());
 
-  // Check if the student exists
+  
   if (!students.containsKey(studentId)) {
     printError('Student with ID $studentId does not exist.');
     return;
@@ -224,7 +224,7 @@ void updateStudent(Map<String, Student> students) {
 void updateCourse(Map<String, Course> courses) {
   String courseId = readInput('Enter course ID', existingIds: courses.keys.toList());
 
-  // Check if the course exists
+  
   if (!courses.containsKey(courseId)) {
     printError('Course with ID $courseId does not exist.');
     return;
