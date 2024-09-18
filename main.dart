@@ -18,10 +18,12 @@ void main() {
     print('4. View Student Schedule');
     print('5. View Course Roster');
     print('6. Drop Course');
-    print('7. Update Student');
-    print('8. Update Course');
-    print('9. Exit');
-    String choice = readInput('Choose an option', validChoices: ['1', '2', '3', '4', '5', '6', '7', '8', '9']);
+    print('7. Drop Student');
+    print('8. Update Student');
+    print('9. Update Course');
+    print('10. Exit');
+    String choice = readInput('Choose an option',
+        validChoices: ['1', '2', '3', '4', '5', '6', '7', '8', '9']);
 
     switch (choice) {
       case '1':
@@ -42,13 +44,16 @@ void main() {
       case '6':
         dropCourse(students, courses);
         break;
-      case '7':
-        updateStudent(students);
+        case '7':
+        dropStudent(students, courses);
         break;
       case '8':
-        updateCourse(courses);
+        updateStudent(students);
         break;
       case '9':
+        updateCourse(courses);
+        break;
+      case '10':
         running = false;
         print('Goodbye!');
         break;
@@ -56,7 +61,6 @@ void main() {
         printError('Invalid choice. Please try again.');
     }
 
-    
     if (choice != '9') {
       saveData(students, courses);
     }
@@ -71,16 +75,18 @@ void saveData(Map<String, Student> students, Map<String, Course> courses) {
 
 void createStudent(Map<String, Student> students, Map<String, Course> courses) {
   String name = readInput('Enter student name');
-  String studentId = readInput('Enter student ID', isUnique: true, existingIds: students.keys.toList());
+  String studentId = readInput('Enter student ID',
+      isUnique: true, existingIds: students.keys.toList());
 
-  
   printAvailableCourses(courses);
 
-  
-  String coursesInput = readInput('Enter course IDs the student is enrolled in (comma-separated)', isOptional: true);
-  List<String> selectedCourses = coursesInput.isNotEmpty ? coursesInput.split(',').map((e) => e.trim()).toList() : [];
+  String coursesInput = readInput(
+      'Enter course IDs the student is enrolled in (comma-separated)',
+      isOptional: true);
+  List<String> selectedCourses = coursesInput.isNotEmpty
+      ? coursesInput.split(',').map((e) => e.trim()).toList()
+      : [];
 
-  
   List<String> validCourses = [];
   for (var courseId in selectedCourses) {
     if (courses.containsKey(courseId)) {
@@ -90,30 +96,38 @@ void createStudent(Map<String, Student> students, Map<String, Course> courses) {
     }
   }
 
-  
   students[studentId] = Student(name, studentId, validCourses);
   print('Student added successfully.');
 }
 
 void createCourse(Map<String, Course> courses) {
   String courseTitle = readInput('Enter course title');
-  String courseId = readInput('Enter course ID', isUnique: true, existingIds: courses.keys.toList());
+  String courseId = readInput('Enter course ID',
+      isUnique: true, existingIds: courses.keys.toList());
   String instructorName = readInput('Enter instructor name');
-  String studentsInput = readInput('Enter student IDs enrolled in the course (comma-separated)', isOptional: true);
-  List<String> enrolledStudents = studentsInput.isNotEmpty ? studentsInput.split(',').map((e) => e.trim()).toList() : [];
+  String studentsInput = readInput(
+      'Enter student IDs enrolled in the course (comma-separated)',
+      isOptional: true);
+  List<String> enrolledStudents = studentsInput.isNotEmpty
+      ? studentsInput.split(',').map((e) => e.trim()).toList()
+      : [];
 
-  courses[courseId] = Course(courseId, courseTitle, instructorName, enrolledStudents);
+  courses[courseId] =
+      Course(courseId, courseTitle, instructorName, enrolledStudents);
   print('Course added successfully.');
 }
 
-void enrollStudentInCourse(Map<String, Student> students, Map<String, Course> courses) {
-  String studentId = readInput('Enter student ID', existingIds: students.keys.toList());
+void enrollStudentInCourse(
+    Map<String, Student> students, Map<String, Course> courses) {
+  String studentId =
+      readInput('Enter student ID', existingIds: students.keys.toList());
   if (!students.containsKey(studentId)) {
     printError('Student with ID $studentId does not exist.');
     return;
   }
 
-  String courseId = readInput('Enter course ID', existingIds: courses.keys.toList());
+  String courseId =
+      readInput('Enter course ID', existingIds: courses.keys.toList());
   if (!courses.containsKey(courseId)) {
     printError('Course with ID $courseId does not exist.');
     return;
@@ -131,10 +145,11 @@ void enrollStudentInCourse(Map<String, Student> students, Map<String, Course> co
   }
 }
 
-void viewStudentSchedule(Map<String, Student> students, Map<String, Course> courses) {
-  String studentId = readInput('Enter student ID', existingIds: students.keys.toList());
+void viewStudentSchedule(
+    Map<String, Student> students, Map<String, Course> courses) {
+  String studentId =
+      readInput('Enter student ID', existingIds: students.keys.toList());
 
-  
   if (!students.containsKey(studentId)) {
     printError('Student with ID $studentId does not exist.');
     return;
@@ -146,16 +161,17 @@ void viewStudentSchedule(Map<String, Student> students, Map<String, Course> cour
   } else {
     print('Student Schedule:');
     for (var courseId in student.enrolledCourses) {
-      print('- Course ID: $courseId, Course Title: ${courses[courseId]?.courseTitle ?? 'Unknown'}');
+      print(
+          '- Course ID: $courseId, Course Title: ${courses[courseId]?.courseTitle ?? 'Unknown'}');
     }
   }
 }
 
+void viewCourseRoster(
+    Map<String, Course> courses, Map<String, Student> students) {
+  String courseId =
+      readInput('Enter course ID', existingIds: courses.keys.toList());
 
-void viewCourseRoster(Map<String, Course> courses, Map<String, Student> students) {
-  String courseId = readInput('Enter course ID', existingIds: courses.keys.toList());
-
-  
   if (!courses.containsKey(courseId)) {
     printError('Course with ID $courseId does not exist.');
     return;
@@ -167,15 +183,17 @@ void viewCourseRoster(Map<String, Course> courses, Map<String, Student> students
   } else {
     print('Course Roster:');
     for (var studentId in course.enrolledStudents) {
-      print('- Student ID: $studentId, Name: ${students[studentId]?.name ?? 'Unknown'}');
+      print(
+          '- Student ID: $studentId, Name: ${students[studentId]?.name ?? 'Unknown'}');
     }
   }
 }
 
-
 void dropCourse(Map<String, Student> students, Map<String, Course> courses) {
-  String studentId = readInput('Enter student ID', existingIds: students.keys.toList());
-  String courseId = readInput('Enter course ID', existingIds: courses.keys.toList());
+  String studentId =
+      readInput('Enter student ID', existingIds: students.keys.toList());
+  String courseId =
+      readInput('Enter course ID', existingIds: courses.keys.toList());
 
   // Check if student and course exist
   if (!students.containsKey(studentId)) {
@@ -199,11 +217,40 @@ void dropCourse(Map<String, Student> students, Map<String, Course> courses) {
   }
 }
 
-
-void updateStudent(Map<String, Student> students) {
+void dropStudent(Map<String, Student> students, Map<String, Course> courses) {
   String studentId = readInput('Enter student ID', existingIds: students.keys.toList());
 
-  
+  // Check if student exists
+  if (!students.containsKey(studentId)) {
+    printError('Student with ID $studentId does not exist.');
+    return;
+  }
+
+  Student? student = students[studentId];
+
+  // Null check for safety (though students.containsKey(studentId) should prevent this from happening)
+  if (student == null) {
+    printError('Student not found.');
+    return;
+  }
+
+  // Remove student from all enrolled courses
+  for (String courseId in student.enrolledCourses) {
+    Course course = courses[courseId]!;
+    course.enrolledStudents.remove(studentId);
+  }
+
+  // Remove student from the system
+  students.remove(studentId);
+
+  print('Student dropped successfully from all courses and removed from the system.');
+}
+
+
+void updateStudent(Map<String, Student> students) {
+  String studentId =
+      readInput('Enter student ID', existingIds: students.keys.toList());
+
   if (!students.containsKey(studentId)) {
     printError('Student with ID $studentId does not exist.');
     return;
@@ -212,8 +259,12 @@ void updateStudent(Map<String, Student> students) {
   Student student = students[studentId]!;
 
   String newName = readInput('Enter new student name');
-  String newCoursesInput = readInput('Enter new course IDs the student is enrolled in (comma-separated)', isOptional: true);
-  List<String> newCourses = newCoursesInput.isNotEmpty ? newCoursesInput.split(',').map((e) => e.trim()).toList() : [];
+  String newCoursesInput = readInput(
+      'Enter new course IDs the student is enrolled in (comma-separated)',
+      isOptional: true);
+  List<String> newCourses = newCoursesInput.isNotEmpty
+      ? newCoursesInput.split(',').map((e) => e.trim()).toList()
+      : [];
 
   student.name = newName;
   student.enrolledCourses = newCourses;
@@ -222,9 +273,9 @@ void updateStudent(Map<String, Student> students) {
 }
 
 void updateCourse(Map<String, Course> courses) {
-  String courseId = readInput('Enter course ID', existingIds: courses.keys.toList());
+  String courseId =
+      readInput('Enter course ID', existingIds: courses.keys.toList());
 
-  
   if (!courses.containsKey(courseId)) {
     printError('Course with ID $courseId does not exist.');
     return;
@@ -234,8 +285,12 @@ void updateCourse(Map<String, Course> courses) {
 
   String newTitle = readInput('Enter new course title');
   String newInstructorName = readInput('Enter new instructor name');
-  String newStudentsInput = readInput('Enter new student IDs enrolled in the course (comma-separated)', isOptional: true);
-  List<String> newEnrolledStudents = newStudentsInput.isNotEmpty ? newStudentsInput.split(',').map((e) => e.trim()).toList() : [];
+  String newStudentsInput = readInput(
+      'Enter new student IDs enrolled in the course (comma-separated)',
+      isOptional: true);
+  List<String> newEnrolledStudents = newStudentsInput.isNotEmpty
+      ? newStudentsInput.split(',').map((e) => e.trim()).toList()
+      : [];
 
   course.courseTitle = newTitle;
   course.instructorName = newInstructorName;
@@ -243,7 +298,6 @@ void updateCourse(Map<String, Course> courses) {
 
   print('Course updated successfully.');
 }
-
 
 void printAvailableCourses(Map<String, Course> courses) {
   print('Available Courses:');
@@ -256,7 +310,11 @@ void printAvailableCourses(Map<String, Course> courses) {
   }
 }
 
-String readInput(String prompt, {List<String>? validChoices, bool isUnique = false, List<String>? existingIds, bool isOptional = false}) {
+String readInput(String prompt,
+    {List<String>? validChoices,
+    bool isUnique = false,
+    List<String>? existingIds,
+    bool isOptional = false}) {
   while (true) {
     stdout.write('$prompt: ');
     String? input = stdin.readLineSync()?.trim();
